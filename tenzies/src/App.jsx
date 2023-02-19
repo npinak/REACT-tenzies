@@ -1,33 +1,59 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
+import React from "react"
 import './App.css'
+import Dice from './components/Dice.jsx'
+import { nanoid } from "nanoid"
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  
+  // Create new set of dice whether the button is clicked or if the program was just started 
+  function allNewDice() {
+    const newDice = []
+    for (let i = 0; i < 10; i++) {
+      newDice.push({
+        value:Math.ceil(Math.random() * 6), 
+        isHeld: true,
+        id: nanoid()
+      })
+    }
+    return newDice
+  }
+
+  // roll new set of dice when button is clicked
+  function rollDice() {
+    setDice(allNewDice())
+  }
+
+  function holdDice(id){
+    setDice(prevDie => prevDie.map( die => {
+      return die.id === id ? {...die, isHeld: !die.isHeld} : die
+    }))
+  }
+
+  const [dice, setDice] = React.useState(allNewDice())
+
+
+  let dice_elements = dice.map((item, index) => {
+    return (
+      <Dice
+        key={item.id}
+        value={item.value}
+        isHeld={item.isHeld}
+        holdDice={() => holdDice(item.id)}
+      />
+    )
+    
+  })
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main>
+      <div className="dice-container">
+        {dice_elements}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+      <button className="roll-dice" onClick={rollDice}>Roll</button> 
+    </main>
+
   )
 }
 
