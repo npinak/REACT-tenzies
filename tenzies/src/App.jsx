@@ -11,10 +11,10 @@ function App() {
   const [tenzies, setTenzies] = React.useState(false) // state for game win
 
   React.useEffect(() => {
-    const allHeld = dice.every(die => die.isHeld)
+    const allHeld = dice.every(die => die.isHeld) // return true if all dice are held
     const firstValue = dice[0].value
-    const allSameValue = dice.every(die => die.value === firstValue)
-    if (allHeld && allSameValue) {
+    const allSameValue = dice.every(die => die.value === firstValue) //return true if all dice === to first value
+    if (allHeld && allSameValue) { // if both allHeld and allSameValue are true then the game is won
       setTenzies(true)
     }
   }, [dice])
